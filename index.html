@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>СТРОЙ-КОНТУР — ремонт и отделка</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #06080c;
+      font-family: 'Manrope', sans-serif;
+      color: #e8eef5;
+      line-height: 1.5;
+      padding: 24px 16px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Общие стили карточек */
+    .card {
+      background-color: #0c1017;
+      border: 1px solid #1a2536;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Бейдж */
+    .badge {
+      display: inline-block;
+      background-color: rgba(56, 132, 255, 0.1);
+      color: #5b9dff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      padding: 6px 14px;
+      border-radius: 30px;
+      border: 1px solid rgba(56, 132, 255, 0.3);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    /* Объёмный заголовок в стиле референса */
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      color: #ffffff;
+      
+      /* Многослойная тень для эффекта 3D-объёма */
+      text-shadow: 
+        0 1px 0 #1a3a6a,
+        0 2px 0 #16325c,
+        0 3px 0 #132a4e,
+        0 4px 0 #102240,
+        0 5px 0 #0c1a32,
+        0 6px 0 #081224,
+        0 8px 10px rgba(0, 0, 0, 0.6),
+        0 12px 20px rgba(0, 0, 0, 0.4);
+      
+      /* Градиент для блика на буквах */
+      background: linear-gradient(180deg, #ffffff 0%, #b8cce4 40%, #7a9cc4 70%, #4a6a94 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      
+      /* Фильтр для усиления контраста */
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
+    }
+
+    .subhead {
+      font-size: 1rem;
+      color: #8a9bb0;
+      font-weight: 500;
+      margin-bottom: 32px;
+      max-width: 90%;
+      line-height: 1.6;
+    }
+
+    /* Три блока с цифрами */
+    .stats-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      flex: 1 1 100px;
+      background-color: #0c1017;
+      border: 1px solid #1a2536;
+      border-radius: 14px;
+      padding: 20px 14px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #5b9dff;
+      line-height: 1.2;
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: #8a9bb0;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* Заголовок калькулятора */
+    .calc-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 24px;
+      color: #ffffff;
+      line-height: 1.4;
+    }
+
+    /* Шаги калькулятора */
+    .step {
+      margin-bottom: 24px;
+    }
+
+    .step-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #8a9bb0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    /* Кнопки-переключатели */
+    .toggle-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .toggle-btn {
+      background-color: transparent;
+      border: 1px solid #1a2536;
+      color: #e8eef5;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex: 1 1 auto;
+      text-align: center;
+      min-width: 90px;
+    }
+
+    .toggle-btn:hover {
+      border-color: #3884ff;
+      color: #5b9dff;
+    }
+
+    .toggle-btn.active {
+      background-color: #3884ff;
+      border-color: #3884ff;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(56, 132, 255, 0.35);
+    }
+
+    /* Ползунок площади */
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .slider-value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #5b9dff;
+      line-height: 1;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .slider-value span {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #8a9bb0;
+      margin-left: 4px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #1a2536;
+      border-radius: 10px;
+      outline: none;
+      margin: 12px 0 8px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      background: #3884ff;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #0c1017;
+      box-shadow: 0 0 0 1px #3884ff, 0 2px 8px rgba(56, 132, 255, 0.5);
+      transition: transform 0.1s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      background: #3884ff;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #0c1017;
+      box-shadow: 0 0 0 1px #3884ff, 0 2px 8px rgba(56, 132, 255, 0.5);
+    }
+
+    .slider-minmax {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: #8a9bb0;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    /* Блок результата */
+    .result-block {
+      background-color: #06080c;
+      border: 1px solid #1a2536;
+      border-radius: 14px;
+      padding: 22px 20px;
+      margin-top: 32px;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #8a9bb0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .result-price {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #5b9dff;
+      letter-spacing: -1px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      word-break: break-word;
+      text-shadow: 0 2px 10px rgba(56, 132, 255, 0.3);
+    }
+
+    .result-note {
+      font-size: 0.75rem;
+      color: #8a9bb0;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    /* Блок "Как мы работаем" */
+    .how-we-work {
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 20px;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .work-card {
+      background-color: #0c1017;
+      border: 1px solid #1a2536;
+      border-radius: 14px;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .work-card-number {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #3884ff;
+      line-height: 1;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .work-card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #e8eef5;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .work-card-desc {
+      font-size: 0.75rem;
+      color: #8a9bb0;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    /* Кнопка действия */
+    .cta-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .btn-cta {
+      background-color: #3884ff;
+      border: 1px solid #3884ff;
+      color: #ffffff;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 16px 40px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      box-shadow: 
+        0 4px 20px rgba(56, 132, 255, 0.4),
+        0 2px 0 #1a4a99;
+    }
+
+    .btn-cta:hover {
+      background-color: #2a6ee0;
+      border-color: #2a6ee0;
+      box-shadow: 
+        0 6px 24px rgba(56, 132, 255, 0.6),
+        0 2px 0 #1a4a99;
+      transform: translateY(-1px);
+    }
+
+    .btn-cta:active {
+      transform: translateY(1px);
+      box-shadow: 
+        0 2px 10px rgba(56, 132, 255, 0.4),
+        0 1px 0 #1a4a99;
+    }
+
+    /* Подвал */
+    footer {
+      border-top: 1px solid #1a2536;
+      padding-top: 32px;
+      margin-top: 16px;
+    }
+
+    .footer-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #e8eef5;
+      margin-bottom: 8px;
+    }
+
+    .footer-schedule {
+      font-size: 0.9rem;
+      color: #8a9bb0;
+      margin-bottom: 20px;
+    }
+
+    .footer-link-btn {
+      display: inline-block;
+      background-color: transparent;
+      border: 1px solid #1a2536;
+      color: #e8eef5;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 12px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 24px;
+      text-decoration: none;
+    }
+
+    .footer-link-btn:hover {
+      border-color: #3884ff;
+      color: #5b9dff;
+    }
+
+    .footer-copyright {
+      font-size: 0.7rem;
+      color: #8a9bb0;
+      opacity: 0.7;
+    }
+
+    /* Модалка */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+      z-index: 1000;
+    }
+
+    .modal-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background-color: #0c1017;
+      border: 1px solid #1a2536;
+      border-radius: 14px;
+      max-width: 400px;
+      width: 100%;
+      padding: 32px 28px 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      transform: scale(0.96);
+      transition: transform 0.2s;
+    }
+
+    .modal-overlay.visible .modal {
+      transform: scale(1);
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 12px;
+      letter-spacing: -0.3px;
+      text-transform: uppercase;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .modal-text {
+      font-size: 0.95rem;
+      color: #8a9bb0;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .modal-close-btn {
+      background-color: #3884ff;
+      border: none;
+      color: #ffffff;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 12px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 14px rgba(56, 132, 255, 0.3);
+    }
+
+    .modal-close-btn:hover {
+      background-color: #2a6ee0;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 480px) {
+      body {
+        padding: 16px 12px 36px;
+      }
+
+      h1 {
+        font-size: 2rem;
+        letter-spacing: -1px;
+        text-shadow: 
+          0 1px 0 #1a3a6a,
+          0 2px 0 #16325c,
+          0 3px 0 #132a4e,
+          0 4px 0 #102240,
+          0 5px 6px rgba(0, 0, 0, 0.6);
+      }
+
+      .subhead {
+        font-size: 0.9rem;
+        max-width: 100%;
+      }
+
+      .stat-number {
+        font-size: 1.4rem;
+      }
+
+      .stat-label {
+        font-size: 0.65rem;
+      }
+
+      .stats-row {
+        gap: 8px;
+      }
+
+      .stat-item {
+        padding: 16px 8px;
+      }
+
+      .calc-title {
+        font-size: 1.1rem;
+      }
+
+      .toggle-btn {
+        font-size: 0.75rem;
+        padding: 8px 10px;
+        min-width: 70px;
+      }
+
+      .result-price {
+        font-size: 1.8rem;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .work-card {
+        padding: 16px 14px;
+      }
+
+      .btn-cta {
+        width: 100%;
+        padding: 16px 20px;
+        font-size: 0.9rem;
+      }
+
+      .modal {
+        padding: 24px 20px 20px;
+      }
+
+      .footer-link-btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 360px) {
+      h1 {
+        font-size: 1.7rem;
+      }
+
+      .result-price {
+        font-size: 1.6rem;
+      }
+
+      .slider-value {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Шапка -->
+    <div class="badge">РЕМОНТ И ОТДЕЛКА ПОД КЛЮЧ • РАБОТА ПО ДОГОВОРУ</div>
+    <h1>Бригада «СТРОЙ-КОНТУР»</h1>
+    <p class="subhead">Капитальный и косметический ремонт квартир, домов и коммерческих помещений. Фиксируем смету до старта работ и сдаём объект точно в срок.</p>
+
+    <!-- Блок с цифрами -->
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-number">9 лет</div>
+        <div class="stat-label">Опыт бригады</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">140+</div>
+        <div class="stat-label">Сданных объектов</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">2 года</div>
+        <div class="stat-label">Гарантия по договору</div>
+      </div>
+    </div>
+
+    <!-- Калькулятор -->
+    <div class="card">
+      <div class="calc-title">Рассчитайте примерную стоимость работ за 15 секунд</div>
+
+      <!-- Шаг 1: Тип объекта -->
+      <div class="step">
+        <span class="step-label">Шаг 1. Тип объекта</span>
+        <div class="toggle-group" id="objectTypeGroup">
+          <button class="toggle-btn active" data-coeff="1" data-type="apartment">Квартира</button>
+          <button class="toggle-btn" data-coeff="1.15" data-type="house">Частный дом</button>
+          <button class="toggle-btn" data-coeff="0.95" data-type="office">Офис / помещение</button>
+        </div>
+      </div>
+
+      <!-- Шаг 2: Вид ремонта -->
+      <div class="step">
+        <span class="step-label">Шаг 2. Вид ремонта</span>
+        <div class="toggle-group" id="repairTypeGroup">
+          <button class="toggle-btn" data-price="5500" data-type="cosmetic">Косметический</button>
+          <button class="toggle-btn active" data-price="9500" data-type="capital">Капитальный</button>
+          <button class="toggle-btn" data-price="15000" data-type="turnkey">Под ключ с материалами</button>
+        </div>
+      </div>
+
+      <!-- Шаг 3: Площадь -->
+      <div class="step">
+        <span class="step-label">Шаг 3. Площадь помещения</span>
+        <div class="slider-header">
+          <div class="slider-value" id="areaDisplay">55 <span>м²</span></div>
+        </div>
+        <input type="range" id="areaSlider" min="20" max="150" value="55" step="1">
+        <div class="slider-minmax">
+          <span>20 м²</span>
+          <span>150 м²</span>
+        </div>
+      </div>
+
+      <!-- Результат -->
+      <div class="result-block">
+        <div class="result-label">Предварительный расчёт сметы:</div>
+        <div class="result-price" id="totalPrice">522 500 ₽</div>
+        <div class="result-note">Точная стоимость фиксируется после бесплатного замера на объекте.</div>
+      </div>
+    </div>
+
+    <!-- Как мы работаем -->
+    <div class="how-we-work">
+      <div class="section-title">Как мы работаем</div>
+      <div class="steps-grid">
+        <div class="work-card">
+          <div class="work-card-number">01</div>
+          <div class="work-card-title">Бесплатный выезд и замер</div>
+          <div class="work-card-desc">Приедем на объект, оценим состояние стен и полов, составим подробную смету в день обращения.</div>
+        </div>
+        <div class="work-card">
+          <div class="work-card-number">02</div>
+          <div class="work-card-title">Оплата по этапам</div>
+          <div class="work-card-desc">Никаких предоплат за весь ремонт сразу — вы платите только по факту принятия каждого этапа.</div>
+        </div>
+        <div class="work-card">
+          <div class="work-card-number">03</div>
+          <div class="work-card-title">Закупка материалов</div>
+          <div class="work-card-desc">Поможем подобрать черновые и чистовые материалы со скидками от проверенных поставщиков.</div>
+        </div>
+        <div class="work-card">
+          <div class="work-card-number">04</div>
+          <div class="work-card-title">Чистота на объекте</div>
+          <div class="work-card-desc">Вывозим строительный мусор и проводим уборку перед сдачей ключей заказчику.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Кнопка вызова замерщика -->
+    <div class="cta-wrapper">
+      <button class="btn-cta" id="callSurveyorBtn">Вызвать замерщика</button>
+    </div>
+
+    <!-- Подвал -->
+    <footer>
+      <div class="footer-name">Строительная бригада «СТРОЙ-КОНТУР»</div>
+      <div class="footer-schedule">Выезд на замеры ежедневно с 08:00 до 20:00</div>
+      <button class="footer-link-btn" id="messengerBtn">Связаться в мессенджере</button>
+      <div class="footer-copyright">© СТРОЙ-КОНТУР, 2026 • Пример сайта для портфолио</div>
+    </footer>
+  </div>
+
+  <!-- Модальное окно -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-title">Демонстрационный режим</div>
+      <div class="modal-text">Это пример сайта для портфолио. В готовом проекте эта кнопка сразу открывает чат с бригадиром или отправляет параметры вашего расчёта.</div>
+      <button class="modal-close-btn" id="modalCloseBtn">Понятно</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // Состояние калькулятора
+      const state = {
+        objectCoeff: 1,
+        repairPrice: 9500,
+        area: 55
+      };
+
+      // DOM элементы
+      const areaSlider = document.getElementById('areaSlider');
+      const areaDisplay = document.getElementById('areaDisplay');
+      const totalPriceEl = document.getElementById('totalPrice');
+
+      const objectTypeGroup = document.getElementById('objectTypeGroup');
+      const repairTypeGroup = document.getElementById('repairTypeGroup');
+
+      // Форматирование цены
+      function formatPrice(value) {
+        return Math.round(value).toLocaleString('ru-RU').replace(/,/g, ' ') + ' ₽';
+      }
+
+      // Обновление отображаемой цены
+      function updatePrice() {
+        const total = state.area * state.repairPrice * state.objectCoeff;
+        totalPriceEl.textContent = formatPrice(total);
+      }
+
+      // Обновление отображения площади
+      function updateAreaDisplay() {
+        areaDisplay.innerHTML = state.area + ' <span>м²</span>';
+      }
+
+      // --- Обработчики переключателей ---
+
+      // Тип объекта
+      objectTypeGroup.addEventListener('click', (e) => {
+        const btn = e.target.closest('.toggle-btn');
+        if (!btn) return;
+
+        objectTypeGroup.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        state.objectCoeff = parseFloat(btn.dataset.coeff);
+        updatePrice();
+      });
+
+      // Вид ремонта
+      repairTypeGroup.addEventListener('click', (e) => {
+        const btn = e.target.closest('.toggle-btn');
+        if (!btn) return;
+
+        repairTypeGroup.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        state.repairPrice = parseFloat(btn.dataset.price);
+        updatePrice();
+      });
+
+      // Ползунок площади
+      areaSlider.addEventListener('input', (e) => {
+        state.area = parseInt(e.target.value, 10);
+        updateAreaDisplay();
+        updatePrice();
+      });
+
+      // --- Модальное окно ---
+      const modalOverlay = document.getElementById('modalOverlay');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+      const callSurveyorBtn = document.getElementById('callSurveyorBtn');
+      const messengerBtn = document.getElementById('messengerBtn');
+
+      function openModal() {
+        modalOverlay.classList.add('visible');
+      }
+
+      function closeModal() {
+        modalOverlay.classList.remove('visible');
+      }
+
+      callSurveyorBtn.addEventListener('click', openModal);
+      messengerBtn.addEventListener('click', openModal);
+      modalCloseBtn.addEventListener('click', closeModal);
+
+      // Закрытие по клику на оверлей
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+          closeModal();
+        }
+      });
+
+      // Закрытие по Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('visible')) {
+          closeModal();
+        }
+      });
+
+      // --- Инициализация ---
+      updateAreaDisplay();
+      updatePrice();
+
+      const activeObject = objectTypeGroup.querySelector('.toggle-btn.active');
+      if (activeObject) {
+        state.objectCoeff = parseFloat(activeObject.dataset.coeff);
+      }
+      const activeRepair = repairTypeGroup.querySelector('.toggle-btn.active');
+      if (activeRepair) {
+        state.repairPrice = parseFloat(activeRepair.dataset.price);
+      }
+      state.area = parseInt(areaSlider.value, 10);
+      updateAreaDisplay();
+      updatePrice();
+    })();
+  </script>
+</body>
+  </html>
